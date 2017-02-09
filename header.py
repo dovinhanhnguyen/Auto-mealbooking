@@ -1,5 +1,6 @@
 import mechanize
 import cookielib
+import os
 import datetime
 
 def InitBrowser( browser ):
@@ -17,9 +18,11 @@ def InitBrowser( browser ):
 def ConfigUser( config_file ):
 	"""Simple password storage"""
 
-	f = open(config_file, 'r')
+	f = open(os.path.dirname(os.path.abspath(__file__))+'/'+config_file, 'r')
+	data = f.read().splitlines()
+	f.close()
 
-	return f.read().splitlines()
+	return data
 
 def LogIn( browser, raven_url, login_form_name, id_control, pwd_control, username, password ):
 	"""Log in via Raven
