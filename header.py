@@ -37,36 +37,44 @@ def LogIn( browser, raven_url, login_form_name, id_control, pwd_control, usernam
 
 	return
 
-def WhichMeal():
+def WhichMeal( is_special_meal, special_meal_name ):
 	"""Need this because hall depends on weekday"""
 
 	today_date = datetime.date.today()
-	
+
+	if is_special_meal == 'Yes':
+		return special_meal_name
+
 	if (today_date.weekday() == 1) or (today_date.weekday() == 3) or (today_date.weekday() == 6):
 		return 'First Hall'
-	elif today_date.weelday() == 5:
+	elif today_date.weekday() == 5:
 		return 'Cafeteria Hall'
 	
 	else:
 		return 'Abort'
 
-def MealBooking( browser, booking_url, edit_control, update_control, subscribe_control ):
+def MealBooking( browser, booking_url, is_special_meal, special_meal_name, edit_control, update_control, subscribe_control ):
 	"""Book today first hall
-	MealBooking( browser, booking_url, edit_control, update_control, subscribe_control )
+	MealBooking( browser, booking_url, is_special_meal, special_meal_name, edit_control, update_control, subscribe_control )
 	"""
 
 	browser.open(booking_url)
 	request = browser.click_link(text='Bookings')
 	browser.open(request)
-	if WhichMeal() == 'Abort':
-		return
-	else:
-		request = browser.click_link(text=WhichMeal())
-		browser.open(request)
 
+	which_meal = WhichMeal(is_special_meal, special_meal_name)
 	today_date = datetime.date.today()
-	request = browser.click_link(text=today_date.strftime('%A %-d %B %Y'))
-	browser.open(request)
+
+	if which_meal == 'Abort':
+		return
+	elif (which_meal == 'First Hall') or (which_meal == 'Cafeteria Hall'):
+		request = browser.click_link(text=which_meal)
+		browser.open(request)
+		request = browser.click_link(text=today_date.strftime('%A %-d %B %Y'))
+		browser.open(request)
+	else:
+		request = browser.click_link(text=which_meal)
+		browser.open(request)
 	
 	deadline_passed = False
 	"select browser.form"
