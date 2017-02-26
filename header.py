@@ -47,9 +47,10 @@ def WhichMeal( is_special_meal, special_meal_name ):
 
 	if (today_date.weekday() == 1) or (today_date.weekday() == 3) or (today_date.weekday() == 6):
 		return 'First Hall'
+	elif (today_date.weekday() == 0) or (today_date.weekday() == 2):
+		return 'Formal Hall'
 	elif today_date.weekday() == 5:
 		return 'Cafeteria Hall'
-	
 	else:
 		return 'Abort'
 
@@ -67,7 +68,7 @@ def MealBooking( browser, booking_url, is_special_meal, special_meal_name, edit_
 
 	if which_meal == 'Abort':
 		return
-	elif (which_meal == 'First Hall') or (which_meal == 'Cafeteria Hall'):
+	elif (which_meal == 'First Hall') or (which_meal == 'Formal Hall') or (which_meal == 'Cafeteria Hall'):
 		request = browser.click_link(text=which_meal)
 		browser.open(request)
 		request = browser.click_link(text=today_date.strftime('%A %-d %B %Y'))
